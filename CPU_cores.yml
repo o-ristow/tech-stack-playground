@@ -1,0 +1,23 @@
+---
+- name: Gather CPU information
+  hosts: all
+  tasks:
+    - name: Run lscpu command
+      command: lscpu
+      register: cpu_info
+
+    - name: Show raw lscpu output
+      debug:
+        var: cpu_info.stdout
+
+    - name: Extract CPU cores regex matches
+      debug:
+        msg: "{{ cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) }}"
+
+    - name: Extract CPU cores
+      set_fact:
+        cpu_cores: "{{ (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) | first | int) if (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True)) else 0 }}"
+
+    - name: Display the number of CPU cores
+      debug:
+        msg: "Number of CPU cores: {{ cpu_cores }}"
