@@ -1,1 +1,7 @@
+#ignore inventories folder
+
 inventories/
+
+
+# Ignore all system_info JSON files
+system_info_*.json
