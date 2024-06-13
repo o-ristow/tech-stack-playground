@@ -3,6 +3,9 @@
   hosts: all
   become: yes
   tasks:
+    - name: Gather system facts
+      setup:
+      
     - name: Gather CPU information
       command: lscpu
       register: cpu_info
@@ -20,15 +23,23 @@
       command: df -h
       register: disk_info
 
-    - name: Show raw lscpu output
-      debug:
-        var: cpu_info.stdout
+#    - name: Show raw lscpu output
+ #     debug:
+  #      msg: "{{ cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) }}"
 
-    - name: Create JSON output
-      copy:
-        content: |
+    - name: Extract CPU cores
+      set_fact:
+        cpu_cores: "{{ (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) | first | int) if (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True)) else 0 }}"
+#    - name: Show raw lscpu output
+ #     debug:
+  #      msg: "{{ cpu_cores }}"
+
+
+    - name: Create JSON content
+      set_fact:
+        json_content: |
           {
-            "cpu_cores": {{ (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) | first | int) if (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True)) else 0 }}"
+            "cpu_cores": {{ cpu_cores }}, 
             "vt_support": {{ 'enabled' if vt_support.stdout else 'disabled' }},
             "memory": {
               "total_mb": {{ (memory_info.stdout_lines[1].split()[1]) | int }},
@@ -47,5 +58,13 @@
               {% endfor %}
             ]
           }
-        dest: /tmp/system_info.json
 
+    - name: Write JSON output locally
+      copy:
+        content: "{{ json_content }}"
+        dest: "{{ playbook_dir }}/system_info_{{ ansible_facts['hostname'] }}.json"
+      delegate_to: localhost
+      become: no
+
+  vars:
+    playbook_dir: "{{ playbook_dir | default(playbook_dir | realpath('.')) }}"
