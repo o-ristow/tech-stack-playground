@@ -1,0 +1,47 @@
+---
+- name: Gather system information
+  hosts: all
+  become: yes
+  tasks:
+    - name: Gather CPU information
+      command: lscpu
+      register: cpu_info
+
+    - name: Check for VT support
+      command: grep -E 'vmx|svm' /proc/cpuinfo
+      register: vt_support
+      failed_when: false
+
+    - name: Gather memory information
+      command: free -m
+      register: memory_info
+
+    - name: Gather disk space information
+      command: df -h
+      register: disk_info
+
+    - name: Create JSON output
+      copy:
+        content: |
+          {
+            "cpu_cores": {{ (cpu_info.stdout | regex_findall('^CPU\(s\):\s+(\d+)$') | first | int) if (cpu_info.stdout | regex_findall('^CPU\(s\):\s+(\d+)$')) else 0 }},
+            "vt_support": {{ 'enabled' if vt_support.stdout else 'disabled' }},
+            "memory": {
+              "total_mb": {{ (memory_info.stdout_lines[1].split()[1]) | int }},
+              "available_mb": {{ (memory_info.stdout_lines[1].split()[6]) | int }}
+            },
+            "disk": [
+              {% for line in disk_info.stdout_lines[1:] %}
+              {
+                "filesystem": "{{ line.split()[0] }}",
+                "size": "{{ line.split()[1] }}",
+                "used": "{{ line.split()[2] }}",
+                "available": "{{ line.split()[3] }}",
+                "percent_used": "{{ line.split()[4] }}",
+                "mounted_on": "{{ line.split()[5] }}"
+              }{% if not loop.last %},{% endif %}
+              {% endfor %}
+            ]
+          }
+        dest: /tmp/system_info.json
+
