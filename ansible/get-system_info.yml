@@ -33,7 +33,9 @@
 
     - name: Extract CPU cores
       ansible.builtin.set_fact:
-        cpu_cores: "{{ (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) | first | int) if (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True)) else 0 }}"
+        cpu_cores: >
+         {{ (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) | first | int) 
+         if (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True)) else 0 }}
 #    - name: Show raw lscpu output
  #     debug:
   #      msg: "{{ cpu_cores }}"
@@ -41,7 +43,7 @@
 
     - name: Create JSON content
       ansible.builtin.set_fact:
-        json_content: |
+      json_content: |
           {
             "cpu_cores": {{ cpu_cores }}, 
             "vt_support": {{ 'enabled' if vt_support.stdout else 'disabled' }},
@@ -67,8 +69,9 @@
       ansible.builtin.copy:
         content: "{{ json_content }}"
         dest: "{{ playbook_dir }}/system_info_{{ ansible_facts['hostname'] }}.json"
+        mode: "0600"
       delegate_to: localhost
-      become: no
+      become: false
 
   vars:
     playbook_dir: "{{ playbook_dir | default(playbook_dir | realpath('.')) }}"
