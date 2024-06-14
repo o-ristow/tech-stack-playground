@@ -46,7 +46,7 @@
       ansible.builtin.set_fact:
         json_content: |
           {
-            "cpu_cores": {{ cpu_cores }}, 
+            "cpu_cores": {{ cpu_cores }},
             "vt_support": {{ 'enabled' if vt_support.stdout else 'disabled' }},
             "memory": {
               "total_mb": {{ (memory_info.stdout_lines[1].split()[1]) | int }},

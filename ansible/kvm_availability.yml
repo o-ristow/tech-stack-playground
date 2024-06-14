@@ -10,8 +10,7 @@
       failed_when: cpu_vt_support.rc != 0
 
     - name: Check if KVM module is loaded
-      ansible.builtin.command: 
-      cmd: |
+      ansible.builtin.shell: |
        set -o pipefail # <-- adding this will prevent surprises
        lsmod | grep kvm
       executable: /bin/bash
