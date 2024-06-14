@@ -24,4 +24,3 @@
     - name: Display the number of CPU cores
       ansible.builtin.debug:
         msg: "Number of CPU cores: {{ cpu_cores }}"
-        
