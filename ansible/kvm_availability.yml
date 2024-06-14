@@ -4,7 +4,10 @@
   become: true
   tasks:
     - name: Check if CPU supports hardware virtualization
-      ansible.builtin.command: grep -E 'vmx|svm' /proc/cpuinfo
+      ansible.builtin.shell: |
+       set -o pipefail # <-- adding this will prevent surprises
+       grep -E 'vmx|svm' /proc/cpuinfo
+      executable: /bin/bash
       register: cpu_vt_support
       changed_when: false
       failed_when: cpu_vt_support.rc != 0

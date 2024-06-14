@@ -69,10 +69,10 @@
     - name: Write JSON output locally
       ansible.builtin.copy:
         content: "{{ json_content }}"
-        dest: "{{ playbook_dir }}/system_info_{{ ansible_facts['hostname'] }}.json"
+        dest: "{{ base_dir }}/system_info_{{ ansible_facts['hostname'] }}.json"
         mode: "0600"
       delegate_to: localhost
       become: false
 
   vars:
-    playbook_dir: "{{ playbook_dir | default(playbook_dir | realpath('.')) }}"
+    base_dir: "{{ base_dir | default(base_dir | realpath('.')) }}"
