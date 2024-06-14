@@ -1,7 +1,7 @@
 ---
 - name: Gather system information
   hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Gather system facts
       seansible.builtin.setup:
