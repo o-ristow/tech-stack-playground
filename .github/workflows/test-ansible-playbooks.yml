@@ -1,0 +1,29 @@
+name: Test Ansible Playbooks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-ansible:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Ansible
+      run: sudo apt-get install -y ansible
+
+    - name: Create Inventory File
+      run: echo -e "[localhost]\nlocalhost ansible_connection=local" > ansible/inventory
+
+    - name: Run Ansible Lint
+      run: ansible-lint ansible/playbook.yml
+
+    - name: Run Ansible Playbook
+      run: ansible-playbook -i ansible/inventory ansible/playbook.yml --syntax-check
