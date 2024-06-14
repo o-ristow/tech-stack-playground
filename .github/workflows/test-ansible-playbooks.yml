@@ -26,7 +26,7 @@ jobs:
       run: echo -e "[localhost]\nlocalhost ansible_connection=local" > ansible/inventory
 
     - name: Run Ansible Lint
-      run: ansible-lint ansible/playbook.yml
+      run: ansible-lint ansible/*.yml
 
     - name: Run Ansible Playbook
       run: ansible-playbook -i ansible/inventory ansible/*.yml --syntax-check
