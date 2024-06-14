@@ -4,23 +4,24 @@
   become: true
   tasks:
     - name: Gather system facts
-      seansible.builtin.setup:
+      ansible.builtin.setup:
 
     - name: Gather CPU information
-      command: lscpu
+      ansible.builtin.command: lscpu
       register: cpu_info
+      changed_when: false
 
     - name: Check for VT support
-      command: grep -E 'vmx|svm' /proc/cpuinfo
+      ansible.builtin.command: grep -E 'vmx|svm' /proc/cpuinfo
       register: vt_support
       failed_when: false
 
     - name: Gather memory information
-      command: free -m
+      ansible.builtin.command: free -m
       register: memory_info
 
     - name: Gather disk space information
-      command: df -h
+      ansible.builtin.command: df -h
       register: disk_info
 
 #    - name: Show raw lscpu output

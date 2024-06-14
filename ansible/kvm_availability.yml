@@ -4,23 +4,23 @@
   become: yes
   tasks:
     - name: Check if CPU supports hardware virtualization
-      command: grep -E 'vmx|svm' /proc/cpuinfo
+      ansible.builtin.command: grep -E 'vmx|svm' /proc/cpuinfo
       register: cpu_vt_support
       changed_when: false
       failed_when: cpu_vt_support.rc != 0
 
     - name: Check if KVM module is loaded
-      shell: lsmod | grep kvm
+      ansible.builtin.shell: lsmod | grep kvm
       register: kvm_module
       changed_when: false
       failed_when: kvm_module.rc != 0
 
     - name: Verify KVM availability
-      debug:
+      ansible.builtin.debug:
         msg: "KVM is available"
       when: cpu_vt_support.rc == 0 and kvm_module.rc == 0
 
     - name: Report KVM unavailability
-      debug:
+      ansible.builtin.debug:
         msg: "KVM is not available"
       when: cpu_vt_support.rc != 0 or kvm_module.rc != 0
