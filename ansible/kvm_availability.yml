@@ -12,8 +12,8 @@
     - name: Check if KVM module is loaded
       ansible.builtin.shell: 
       cmd: |
-      set -o pipefail # <-- adding this will prevent surprises
-      lsmod | grep kvm
+       set -o pipefail # <-- adding this will prevent surprises
+       lsmod | grep kvm
       executable: /bin/bash
       register: kvm_module
       changed_when: false
