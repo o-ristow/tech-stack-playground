@@ -4,8 +4,8 @@
   become: yes
   tasks:
     - name: Gather system facts
-      setup:
-      
+      seansible.builtin.setup:
+
     - name: Gather CPU information
       command: lscpu
       register: cpu_info
