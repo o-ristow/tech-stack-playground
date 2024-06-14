@@ -1,6 +1,6 @@
 #ignore inventories folder
 
-inventories/
+/ansible/inventories/
 
 
 # Ignore all system_info JSON files
