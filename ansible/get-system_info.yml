@@ -44,7 +44,7 @@
 
     - name: Create JSON content
       ansible.builtin.set_fact:
-       json_content: |
+        json_content: |
           {
             "cpu_cores": {{ cpu_cores }}, 
             "vt_support": {{ 'enabled' if vt_support.stdout else 'disabled' }},
