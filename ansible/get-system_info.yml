@@ -35,7 +35,7 @@
     - name: Extract CPU cores
       ansible.builtin.set_fact:
         cpu_cores: >
-         {{ (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) | first | int) 
+         {{ (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) | first | int)
          if (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True)) else 0 }}
 #    - name: Show raw lscpu output
  #     debug:
