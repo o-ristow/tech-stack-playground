@@ -1,14 +1,16 @@
-- name: Gather system information
+- name: Install all necessary tools for KVM
   hosts: all
   become: true
+
+  pre_tasks:
+    - name: Import KVM availability playbook
+      import_playbook: kvm_availability.yml
+
   tasks:
     - name: Gather system facts
       ansible.builtin.setup:
 
-    - name: Import KVM availability playbook
-      import_playbook: kvm_availability.yml
-
-    # You can add more tasks here, they will be skipped if kvm_availability fails
+# You can add more tasks here, they will be skipped if kvm_availability fails
     - name: Continue with other tasks if KVM is available
       debug:
         msg: "KVM is available, continuing with the rest of the playbook."
