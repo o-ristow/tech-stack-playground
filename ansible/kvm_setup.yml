@@ -25,3 +25,33 @@
         name: libvirtd
         enabled: true
         state: started
+
+    - name: Add sys_admin to libvirt and kvm groups
+      ansible.builtin.user:
+        name: "{{ users.sys_admin.name }}"
+        groups: libvirt,kvm
+        append: true
+
+    - name: Add vm_manager to libvirt and kvm groups
+      ansible.builtin.user:
+        name: "{{ users.vm_manager.name }}"
+        groups: libvirt,kvm
+        append: true
+
+    - name: Refresh group membership for sys_admin
+      ansible.builtin.shell: "newgrp libvirt"
+      args:
+        executable: /bin/bash
+      register: newgrp_sysadmin
+      changed_when: false
+      failed_when: newgrp_sysadmin.rc != 0
+      when: ansible_user_id == users.sys_admin.name
+
+    - name: Refresh group membership for vm_manager
+      ansible.builtin.shell: "newgrp libvirt"
+      args:
+        executable: /bin/bash
+      register: newgrp_vmmanager
+      changed_when: false
+      failed_when: newgrp_vmmanager.rc != 0
+      when: ansible_user_id == users.vm_manager.name
