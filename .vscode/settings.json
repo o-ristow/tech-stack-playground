@@ -1,3 +1,6 @@
 {
-    "ansible.python.interpreterPath": "/usr/bin/python3"
+    "ansible.python.interpreterPath": "/usr/bin/python3",
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": "file:///Users/olli/github-repos/tech-stack-playground/ansible/kvm_terraform_setup.yml"
+    }
 }
