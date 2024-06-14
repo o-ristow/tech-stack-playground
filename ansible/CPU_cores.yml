@@ -3,21 +3,24 @@
   hosts: all
   tasks:
     - name: Run lscpu command
-      command: lscpu
+      ansible.builtin.command: lscpu
       register: cpu_info
+      changed_when: false
 
     - name: Show raw lscpu output
-      debug:
+      ansible.builtin.debug:
         var: cpu_info.stdout
 
     - name: Extract CPU cores regex matches
-      debug:
+      ansible.builtin.debug:
         msg: "{{ cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) }}"
 
     - name: Extract CPU cores
-      set_fact:
-        cpu_cores: "{{ (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) | first | int) if (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True)) else 0 }}"
+      ansible.builtin.set_fact:
+        cpu_cores: >
+         {{ (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) | first | int) 
+         if (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True)) else 0 }}
 
     - name: Display the number of CPU cores
-      debug:
+      ansible.builtin.debug:
         msg: "Number of CPU cores: {{ cpu_cores }}"
