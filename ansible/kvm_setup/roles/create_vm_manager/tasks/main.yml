@@ -1,0 +1,12 @@
+---
+- name: Create vm_manager user
+  ansible.builtin.user:
+    name: "{{ users.vm_manager.name }}"
+    password: "{{ users.vm_manager.password }}"
+    shell: "{{ users.vm_manager.shell }}"
+    state: present
+- name: Add vm_manager to libvirt group
+  ansible.builtin.user:
+    name: "{{ users.vm_manager.name }}"
+    groups: libvirt
+    append: true

@@ -1,0 +1,12 @@
+---
+- name: Create sys_admin user
+  ansible.builtin.user:
+    name: "{{ users.sys_admin.name }}"
+    password: "{{ users.sys_admin.password }}"
+    shell: "{{ users.sys_admin.shell }}"
+    state: present
+- name: Add sys_admin to sudoers
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/sys_admin
+    content: "{{ users.sys_admin.name }} ALL=(ALL) NOPASSWD:ALL"
+    mode: '0440'

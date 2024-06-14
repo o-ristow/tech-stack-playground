@@ -1,0 +1,12 @@
+---
+- name: Create docker_service user
+  ansible.builtin.user:
+    name: "{{ users.docker_service.name }}"
+    password: "{{ users.docker_service.password }}"
+    shell: "{{ users.docker_service.shell }}"
+    state: present
+- name: Add docker_service to docker group
+  ansible.builtin.user:
+    name: "{{ users.docker_service.name }}"
+    groups: docker
+    append: true

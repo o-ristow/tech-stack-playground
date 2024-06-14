@@ -1,0 +1,12 @@
+---
+- name: Create kube_operator user
+  ansible.builtin.user:
+    name: "{{ users.kube_operator.name }}"
+    password: "{{ users.kube_operator.password }}"
+    shell: "{{ users.kube_operator.shell }}"
+    state: present
+- name: Add kube_operator to docker group
+  ansible.builtin.user:
+    name: "{{ users.kube_operator.name }}"
+    groups: docker
+    append: true

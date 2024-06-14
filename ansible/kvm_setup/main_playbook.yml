@@ -1,0 +1,36 @@
+---
+- name: Setup roles for KVM environment
+  hosts: all
+  become: true
+  vars:
+    users:
+      sys_admin:
+        name: sys_admin
+        password: "{{ 'password123' | password_hash('sha512') }}"
+        shell: /bin/bash
+      vm_manager:
+        name: vm_manager
+        password: "{{ 'password123' | password_hash('sha512') }}"
+        shell: /bin/bash
+      kube_operator:
+        name: kube_operator
+        password: "{{ 'password123' | password_hash('sha512') }}"
+        shell: /bin/bash
+      docker_service:
+        name: docker_service
+        password: "{{ 'password123' | password_hash('sha512') }}"
+        shell: /bin/bash
+
+  tasks:
+    - name: Include sys_admin role
+      ansible.builtin.include_role:
+        name: create_sys_admin
+    - name: Include vm_manager role
+      ansible.builtin.include_role:
+        name: create_vm_manager
+    - name: Include kube_operator role
+      ansible.builtin.include_role:
+        name: create_kube_operator
+    - name: Include docker_service role
+      ansible.builtin.include_role:
+        name: create_docker_service
