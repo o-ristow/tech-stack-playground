@@ -4,3 +4,4 @@
   tasks:
     - name: Gather system facts
       ansible.builtin.setup:
+      
