@@ -8,7 +8,7 @@
        set -o pipefail # <-- adding this will prevent surprises
        grep -E 'vmx|svm' /proc/cpuinfo
       args:
-       executable: /bin/bash
+        executable: /bin/bash
       register: cpu_vt_support
       changed_when: false
       failed_when: cpu_vt_support.rc != 0
@@ -18,7 +18,7 @@
        set -o pipefail # <-- adding this will prevent surprises
        lsmod | grep kvm
       args:
-       executable: /bin/bash
+        executable: /bin/bash
       register: kvm_module
       changed_when: false
       failed_when: kvm_module.rc != 0
