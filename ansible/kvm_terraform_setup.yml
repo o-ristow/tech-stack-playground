@@ -1,0 +1,6 @@
+- name: Gather system information
+  hosts: all
+  become: true
+  tasks:
+    - name: Gather system facts
+      ansible.builtin.setup:
