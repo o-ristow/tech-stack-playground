@@ -5,3 +5,4 @@
 
 # Ignore all system_info JSON files
 system_info_*.json
+.vscode/settings.json
