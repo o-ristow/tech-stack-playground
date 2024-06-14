@@ -1,7 +1,7 @@
 ---
 - name: Check for KVM availability
   hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Check if CPU supports hardware virtualization
       ansible.builtin.command: grep -E 'vmx|svm' /proc/cpuinfo
@@ -10,7 +10,11 @@
       failed_when: cpu_vt_support.rc != 0
 
     - name: Check if KVM module is loaded
-      ansible.builtin.shell: lsmod | grep kvm
+      ansible.builtin.shell: 
+      cmd: |
+      set -o pipefail # <-- adding this will prevent surprises
+      lsmod | grep kvm
+      executable: /bin/bash
       register: kvm_module
       changed_when: false
       failed_when: kvm_module.rc != 0

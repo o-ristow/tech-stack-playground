@@ -14,22 +14,25 @@
     - name: Check for VT support
       ansible.builtin.command: grep -E 'vmx|svm' /proc/cpuinfo
       register: vt_support
-      failed_when: false
+      #failed_when: false
+      changed_when: false
 
     - name: Gather memory information
       ansible.builtin.command: free -m
       register: memory_info
+      changed_when: false
 
     - name: Gather disk space information
       ansible.builtin.command: df -h
       register: disk_info
+      changed_when: false
 
 #    - name: Show raw lscpu output
  #     debug:
   #      msg: "{{ cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) }}"
 
     - name: Extract CPU cores
-      set_fact:
+      ansible.builtin.set_fact:
         cpu_cores: "{{ (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True) | first | int) if (cpu_info.stdout | regex_findall('^CPU\\(s\\):\\s+(\\d+)$', multiline=True)) else 0 }}"
 #    - name: Show raw lscpu output
  #     debug:
@@ -37,7 +40,7 @@
 
 
     - name: Create JSON content
-      set_fact:
+      ansible.builtin.set_fact:
         json_content: |
           {
             "cpu_cores": {{ cpu_cores }}, 
@@ -61,7 +64,7 @@
           }
 
     - name: Write JSON output locally
-      copy:
+      ansible.builtin.copy:
         content: "{{ json_content }}"
         dest: "{{ playbook_dir }}/system_info_{{ ansible_facts['hostname'] }}.json"
       delegate_to: localhost
