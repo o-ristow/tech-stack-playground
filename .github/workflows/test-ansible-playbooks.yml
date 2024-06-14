@@ -19,6 +19,9 @@ jobs:
     - name: Install Ansible
       run: sudo apt-get install -y ansible
 
+    - name: Install Ansible Lint
+      run: sudo apt-get install -y python3-pip && pip3 install ansible-lint  
+
     - name: Create Inventory File
       run: echo -e "[localhost]\nlocalhost ansible_connection=local" > ansible/inventory
 
